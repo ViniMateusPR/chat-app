@@ -1,11 +1,15 @@
-import 'package:chat_app/pages/login_page.dart';
+import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/navigation_service.dart';
 import 'package:chat_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get_it/get_it.dart';
 
 void main() async{
   await setup();
-  runApp(const MyApp());
+  runApp(
+    MyApp(),
+  );
 }
 
 Future<void> setup() async{
@@ -15,12 +19,20 @@ Future<void> setup() async{
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GetIt _getIt = GetIt.instance;
+  late NavigationService _navigationService;
+  late AuthService _authService;
 
-  // This widget is the root of your application.
+  MyApp({super.key}){
+    _navigationService = _getIt.get<NavigationService>();
+    _authService = _getIt.get<AuthService>();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigationService.navigatorKey,
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -28,7 +40,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: LoginPage(),
+      initialRoute: _authService.user != null ? "/home" : "/login",
+      routes: _navigationService.routes,
     );
   }
 }
