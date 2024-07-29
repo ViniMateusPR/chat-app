@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:chat_app/consts.dart';
+import 'package:chat_app/services/alert_service.dart';
 import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/services/navigation_service.dart';
 import 'package:chat_app/widgets/custom_form_field.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 
@@ -23,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
 
   late AuthService _authService;
   late NavigationService _navigationService;
+  late AlertService _alertService;
+
   String? email, password;
 
   @override
@@ -30,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _authService = _getIt.get<AuthService>();
     _navigationService = _getIt.get<NavigationService>();
+    _alertService = _getIt.get<AlertService>();
   }
 
   @override
@@ -43,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildUI() {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 2.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
         child: Column(
           children: [_headerText(), _loginForm(), _createAnAccountLink()],
         ),
@@ -127,7 +132,8 @@ class _LoginPageState extends State<LoginPage> {
              if(result) {
                 _navigationService.pushReplacementNamed("/home");
              } else {
-
+                _alertService.showToast(text: "Failed to login, Please try again!",
+                icon: Icons.error);
              }
           }
         },
@@ -141,21 +147,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _createAnAccountLink() {
-    return const Expanded(child: Row(
+    return Expanded(child: Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(
+        const Text(
           "Don't have an account?",
         ),
-        SizedBox(
+        const SizedBox(
           width: 5,
         ),
-        Text(
-          "Sing Up",
-          style: TextStyle(
-            fontWeight: FontWeight.w800
+        GestureDetector(
+          onTap: () {
+            _navigationService.pushNamed("/register");
+          },
+          child: const Text(
+            "Sing Up",
+            style: TextStyle(
+              fontWeight: FontWeight.w800
+            ),
           ),
         ),
       ],
