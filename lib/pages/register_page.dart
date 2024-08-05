@@ -11,7 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:chat_app/consts.dart';
 import 'package:flutter/material.dart';
 
-// 1:53
+// 2:26
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 

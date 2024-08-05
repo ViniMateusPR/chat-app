@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class UserProfile {
   String? uid;
   String? name;
